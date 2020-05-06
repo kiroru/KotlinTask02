@@ -7,7 +7,7 @@ import androidx.room.Query
 @Dao
 interface MemoDao {
 
-    @Query("SELECT mid, title, description from MEMO ORDER BY mid")
+    @Query("SELECT mid, title, description FROM memo ORDER BY mid")
     fun findAll(): List<Memo>
 
     @Query("SELECT COUNT(mid) FROM memo")
