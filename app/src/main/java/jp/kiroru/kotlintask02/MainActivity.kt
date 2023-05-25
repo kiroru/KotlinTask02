@@ -2,11 +2,11 @@ package jp.kiroru.kotlintask02
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -24,11 +24,13 @@ interface ItemSelectionListener {
 
 class MainActivity : AppCompatActivity(), ItemSelectionListener, MemoListener {
 
-    private val TAG = MainActivity::class.java.simpleName
+    companion object {
+        private val TAG = MainActivity::class.java.simpleName
+    }
 
     private var items = mutableListOf<Memo>()
     private var adapter: MyAdapter? = null
-    private val handler: Handler = Handler()
+    private val handler: Handler = Handler(Looper.getMainLooper())
     private lateinit var binding : ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,18 +48,18 @@ class MainActivity : AppCompatActivity(), ItemSelectionListener, MemoListener {
 
         binding.floatingButton.setOnClickListener {
             val i = Intent(this, EntryActivity::class.java)
-            startActivityForResult(i, EntryActivity.REQUESTCODE_ENTRY)
+            startActivityForResult(i, EntryActivity.REQUEST_CODE_ENTRY)
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        Log.d(TAG, "onActivityResult: ${requestCode}")
+        Log.d(TAG, "onActivityResult: $requestCode")
 
         when (requestCode) {
-            EntryActivity.REQUESTCODE_ENTRY -> {
-                Log.d(TAG, "REQUESTCODE_ENTRY: ${resultCode}")
+            EntryActivity.REQUEST_CODE_ENTRY -> {
+                Log.d(TAG, "REQUEST_CODE_ENTRY: $resultCode")
                 if (resultCode == Activity.RESULT_OK) {
                     val mid = data?.getLongExtra("mid", 0L)
                     val title = data?.getStringExtra("title") ?: ""
@@ -67,8 +69,8 @@ class MainActivity : AppCompatActivity(), ItemSelectionListener, MemoListener {
                     MemoManager.insert(title, description)
                 }
             }
-            EntryActivity.REQUESTCODE_EDIT -> {
-                Log.d(TAG, "REQUESTCODE_EDIT: ${resultCode}")
+            EntryActivity.REQUEST_CODE_EDIT -> {
+                Log.d(TAG, "REQUEST_CODE_EDIT: $resultCode")
                 if (resultCode == Activity.RESULT_OK) {
                     val mid = data?.getLongExtra("mid", 0L) ?: 0L
                     val title = data?.getStringExtra("title") ?: ""
@@ -87,7 +89,7 @@ class MainActivity : AppCompatActivity(), ItemSelectionListener, MemoListener {
         i.putExtra("mid", item.mid)
         i.putExtra("title", item.title)
         i.putExtra("description", item.description)
-        startActivityForResult(i, EntryActivity.REQUESTCODE_EDIT)
+        startActivityForResult(i, EntryActivity.REQUEST_CODE_EDIT)
     }
 
     override fun requireItemDelete(position: Int) {
@@ -95,16 +97,16 @@ class MainActivity : AppCompatActivity(), ItemSelectionListener, MemoListener {
         AlertDialog.Builder(this)
             .setTitle("メモ削除")
             .setMessage("${item.title} を削除します。よろしいですか？")
-            .setPositiveButton("OK", DialogInterface.OnClickListener { _, i ->
+            .setPositiveButton("OK") { _, _ ->
                 MemoManager.delete(item.mid)
-            })
+            }
             .setNegativeButton("削除しない", null)
             .show()
     }
 
     override fun notifyChanged(action: ACTION, items: List<Memo>) {
         handler.post {
-            var text = when (action) {
+            val text = when (action) {
                 ACTION.SETUP  -> "セットアップ完了しました。"
                 ACTION.INSERT -> "メモを追加しました。"
                 ACTION.UPDATE -> "メモを更新しました。"
@@ -134,15 +136,17 @@ class MyAdapter(private val items: List<Memo>, private val listener: ItemSelecti
 
         val item = items[position]
 
-        holder.tv1.text = "(${item.mid}) ${item.title}"
+        val textView1 = holder.itemView.context.getString(R.string.textView1, item.mid, item.title)
+
+        holder.tv1.text = textView1
         holder.tv2.text = item.description
 
         holder.b1.setOnClickListener {
-            listener?.requireItemEdit(position)     // Edit
+            listener.requireItemEdit(position)     // Edit
         }
 
         holder.b2.setOnClickListener {
-            listener?.requireItemDelete(position)   // Delete
+            listener.requireItemDelete(position)   // Delete
         }
     }
 

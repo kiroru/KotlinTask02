@@ -11,8 +11,8 @@ import jp.kiroru.kotlintask02.databinding.ActivityEntryBinding
 class EntryActivity : AppCompatActivity() {
 
     companion object {
-        val REQUESTCODE_ENTRY = 100
-        val REQUESTCODE_EDIT  = 101
+        const val REQUEST_CODE_ENTRY = 100
+        const val REQUEST_CODE_EDIT  = 101
     }
 
     private lateinit var binding: ActivityEntryBinding

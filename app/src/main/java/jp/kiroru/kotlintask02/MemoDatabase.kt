@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase
 abstract class MemoDatabase : RoomDatabase() {
 
     companion object {
-        val DATABASE_NAME = "memo"
+        const val DATABASE_NAME = "memo"
     }
 
     abstract fun memoDao(): MemoDao

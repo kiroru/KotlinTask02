@@ -6,8 +6,6 @@ import androidx.room.Room
 
 object MemoManager {
 
-    private val TAG = MemoManager::class.java.simpleName
-
     private var db: MemoDatabase? = null
     private var listener: MemoListener? = null
 
@@ -15,7 +13,6 @@ object MemoManager {
         this.listener = listener
 
         if (db == null) {
-            //db = Room.databaseBuilder(context.applicationContext, MemoDatabase::class.java, MemoDatabase.DATABASE_NAME).build()
             db = Room.databaseBuilder(context.applicationContext, MemoDatabase::class.java, MemoDatabase.DATABASE_NAME).build()
 
             AppExecutors.newInstance().databaseExecutor.execute {
@@ -34,7 +31,7 @@ object MemoManager {
                 }
 
                 val items = findAll()
-                listener?.notifyChanged(ACTION.SETUP, items)
+                listener.notifyChanged(ACTION.SETUP, items)
             }
         }
     }
