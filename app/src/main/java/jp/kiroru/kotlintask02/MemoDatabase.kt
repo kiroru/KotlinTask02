@@ -1,6 +1,5 @@
 package jp.kiroru.kotlintask02
 
-
 import androidx.room.Database
 import androidx.room.RoomDatabase
 

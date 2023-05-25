@@ -1,6 +1,5 @@
 package jp.kiroru.kotlintask02
 
-
 import android.content.Context
 import androidx.room.Room
 
