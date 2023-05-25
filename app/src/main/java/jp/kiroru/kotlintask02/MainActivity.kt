@@ -9,13 +9,12 @@ import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.android.synthetic.main.cell_main.view.*
+import jp.kiroru.kotlintask02.databinding.ActivityMainBinding
+import jp.kiroru.kotlintask02.databinding.CellMainBinding
 
 
 interface ItemSelectionListener {
@@ -30,22 +29,22 @@ class MainActivity : AppCompatActivity(), ItemSelectionListener, MemoListener {
     private var items = mutableListOf<Memo>()
     private var adapter: MyAdapter? = null
     private val handler: Handler = Handler()
+    private lateinit var binding : ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
         MemoManager.setup(this, this)
 
-        val view = findViewById<RecyclerView>(R.id.recyclerView)
-
-        view.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
 
         adapter = MyAdapter(items, this)
-        view.adapter = adapter
+        binding.recyclerView.adapter = adapter
 
-        val button = findViewById<FloatingActionButton>(R.id.floatingButton)
-        button.setOnClickListener {
+        binding.floatingButton.setOnClickListener {
             val i = Intent(this, EntryActivity::class.java)
             startActivityForResult(i, EntryActivity.REQUESTCODE_ENTRY)
         }
@@ -125,8 +124,8 @@ class MainActivity : AppCompatActivity(), ItemSelectionListener, MemoListener {
 class MyAdapter(private val items: List<Memo>, private val listener: ItemSelectionListener) : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.cell_main, parent, false)
-        return ViewHolder(view)
+        val binding = CellMainBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
     }
 
     override fun getItemCount() = items.size
@@ -147,10 +146,11 @@ class MyAdapter(private val items: List<Memo>, private val listener: ItemSelecti
         }
     }
 
-    class ViewHolder(val view: View): RecyclerView.ViewHolder(view) {
-        val tv1 = view.textView1
-        val tv2 = view.textView2
-        val b1 = view.buttonEdit
-        val b2 = view.buttonDelete
+    class ViewHolder(cellMainBinding: CellMainBinding):
+        RecyclerView.ViewHolder(cellMainBinding.root) {
+        val tv1 = cellMainBinding.textView1
+        val tv2 = cellMainBinding.textView2
+        val b1 = cellMainBinding.buttonEdit
+        val b2 = cellMainBinding.buttonDelete
     }
 }

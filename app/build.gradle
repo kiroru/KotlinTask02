@@ -1,7 +1,6 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'kotlin-android-extensions'
     id 'com.google.devtools.ksp'
 }
 
@@ -31,6 +30,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = '17'
+    }
+    viewBinding {
+        enabled = true
     }
 }
 
