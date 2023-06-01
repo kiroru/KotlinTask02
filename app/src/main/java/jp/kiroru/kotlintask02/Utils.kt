@@ -15,5 +15,5 @@ fun markFirst(context: Context) {
     val pref = PreferenceManager.getDefaultSharedPreferences(context)
     val editor = pref.edit()
     editor.putBoolean(FIRST, false)
-    editor.commit()
+    editor.apply()
 }

@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">KotlinTask02</string>
+    
+    <string name="textView1">(%1$d) %2$s</string>
+    <string name="title">タイトル</string>
+    <string name="description">説明</string>
+    <string name="cancel">キャンセル</string>
+    <string name="ok">OK</string>
+    <string name="text_view">TextView</string>
+    <string name="edit">編集</string>
+    <string name="delete">削除</string>
+
+    <!-- contentDescription -->
+    <string name="floating_action_button">FloatingActionButton</string>
+
 </resources>
