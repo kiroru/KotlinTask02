@@ -30,7 +30,6 @@ class MainActivity : AppCompatActivity(), ItemSelectionListener, MemoListener {
 
     private var items = mutableListOf<Memo>()
     private var adapter: MyAdapter? = null
-    private val handler: Handler = Handler(Looper.getMainLooper())
     private lateinit var binding : ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -105,7 +104,7 @@ class MainActivity : AppCompatActivity(), ItemSelectionListener, MemoListener {
     }
 
     override fun notifyChanged(action: ACTION, items: List<Memo>) {
-        handler.post {
+        AppExecutors.newInstance().mainExecutor.execute {
             val text = when (action) {
                 ACTION.SETUP  -> "セットアップ完了しました。"
                 ACTION.INSERT -> "メモを追加しました。"
