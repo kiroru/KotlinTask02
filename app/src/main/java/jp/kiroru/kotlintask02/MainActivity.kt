@@ -126,7 +126,15 @@ class MyAdapter(private val items: List<Memo>, private val listener: ItemSelecti
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = CellMainBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding)
+        return ViewHolder(binding).apply {
+            binding.buttonEdit.setOnClickListener {
+                listener.requireItemEdit(adapterPosition)     // Edit
+            }
+
+            binding.buttonDelete.setOnClickListener {
+                listener.requireItemDelete(adapterPosition)   // Delete
+            }
+        }
     }
 
     override fun getItemCount() = items.size
@@ -140,20 +148,11 @@ class MyAdapter(private val items: List<Memo>, private val listener: ItemSelecti
         holder.tv1.text = textView1
         holder.tv2.text = item.description
 
-        holder.b1.setOnClickListener {
-            listener.requireItemEdit(position)     // Edit
-        }
-
-        holder.b2.setOnClickListener {
-            listener.requireItemDelete(position)   // Delete
-        }
     }
 
     class ViewHolder(cellMainBinding: CellMainBinding):
         RecyclerView.ViewHolder(cellMainBinding.root) {
         val tv1 = cellMainBinding.textView1
         val tv2 = cellMainBinding.textView2
-        val b1 = cellMainBinding.buttonEdit
-        val b2 = cellMainBinding.buttonDelete
     }
 }
